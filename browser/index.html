@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Generator | Markov Chains 🔗</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>Text Generator 🔗</h1>
+    <p>Generates a random yet syntactically plausible-ish and meaningful-ish text using Markov chains and a bit of luck. Sometimes outputs “wise thoughts”&trade;</p>
+
+    <h2>Try Yourself! 👨‍💻</h2>
+    <p>Upload a .txt file with a text that will be used as the source for word generation. The more words the text contains the better, more than 100k is perfect :–)</p>
+
+    <form id="form">
+      <label>
+        <span>How many words to generate:</span>
+        <input type="number" name="wordsCount" value="500" min="100" max="50000" step="100">
+      </label>
+      <label>
+        <span>How many previous words to use to generate the next one:</span>
+        <input type="number" name="sampleSize" value="6" min="2" max="15" step="1">
+      </label>
+      <label class="row">
+        <span>Source text:</span>
+        <input type="file" name="source" accept="txt" required>
+      </label>
+      <button>Generate</button>
+    </form>
+
+    <div class="result" id="result" contenteditable></div>
+
+    <h2>How it works 🛠</h2>
+    <p>The generator uses Markov chains to randomly choose a word based on previously generated words—<i>the chain</i>. The whole process consists of 3 steps.</p>
+
+    <h3>Parsing and tokenizing</h3>
+    <p>The generator takes the source text and splits it into tokens: words, punctuation, spaces, line breaks.</p>
+
+    <h3>Creating predictions map</h3>
+    <p>Each token has its following token: a word, punctuation mark, or a space. The same token can have a list of many different following ones. This list allows to randomly select the “next token” based on the current one.</p>
+    <p>For better syntax “comprehension”, the generator creates a map between a <i>group of tokens</i> with a certain length and a list of tokens following that <i>group</i>. This way, a generated sentence is more likely to “consider” the syntax of a language.</p>
+
+    <h3>Generating words</h3>
+    <p>The generator then iteratively selects a random token based on the last group in the chain and <i>adds it</i> to the chain, making it longer and changing the last token group.</p>
+
+    <h2>Post about it ✍️</h2>
+    <p>More info about Markov chains, text generation, and how to create one of these generators you can find in my post:</p>
+    <ul>
+      <li>🇷🇺 <a href="#">In Russian</a></li>
+      <li>🇬🇧 <a href="#">In English</a></li>
+    </ul>
+  </div>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
