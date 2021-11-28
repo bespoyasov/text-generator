@@ -17,6 +17,11 @@ const fromTokens = (tokens) => escapeString(tokens.join(""));
  * We need to slice the given source text into a set of `samples`.
  * Each sample contains 2 or more `tokens` — words, spaces, or punctuation marks.
  * The bigger `sampleSize` is, the more tokens are used to generate the next.
+ *
+ * @param {Array<Token>} corpus, the source text represented as an array of tokens.
+ * @param {number} sampleSize, the size of a token group, first tokens of which
+ *                             will constitute the TransitionMatrix key.
+ * @return {Array<Sample>}
  */
 function sliceCorpus(corpus, sampleSize) {
   return corpus
@@ -25,7 +30,7 @@ function sliceCorpus(corpus, sampleSize) {
 }
 
 /**
- * Transition matrix is an object with `samples` as keys
+ * Transition matrix is an object with samples' first tokens as keys
  * and lists of their following tokens as values.
  * This object will allow to randomly select one
  * of the following tokens to “generate” the next word.
@@ -33,6 +38,9 @@ function sliceCorpus(corpus, sampleSize) {
  * We don't use Map() here, since we would need to stringify keys anyway.
  * Map uses referential equality for keys comparison
  * and different array instances would be considered as different keys.
+ *
+ * @param {Array<Sample>} samples, an array of token groups.
+ * @return {TransitionMatrix}
  */
 function collectTransitions(samples) {
   return samples.reduce((transitions, sample) => {
@@ -52,6 +60,10 @@ function collectTransitions(samples) {
 /**
  * Initially, the chain is the tokenized `startText` if given,
  * or a random sample—the key from the transition matrix.
+ *
+ * @param {string} startText, a string to be used as the initial tokens for the chain.
+ * @param {TransitionMatrix} transitions, the transition matrix object.
+ * @returns {Chain}
  */
 function createChain(startText, transitions) {
   const head = startText ?? pickRandom(Object.keys(transitions));
@@ -60,10 +72,15 @@ function createChain(startText, transitions) {
 
 /**
  * When generating a next word,
- * we take the (`sampleSize`) number of last `tokens` from the chain.
+ * we take the (`sampleSize` - 1) number of last `tokens` from the chain.
  * These tokens consist a key for the transition matrix,
  * by which we get a list of possible next words,
  * and randomly select one from them.
+ *
+ * @param {Chain} chain, a current list of tokens representing the chain.
+ * @param {TransitionMatrix} transitions, the transition matrix object.
+ * @param {number} sampleSize, the number of tokens in a group.
+ * @returns {Token}
  */
 function predictNext(chain, transitions, sampleSize) {
   const lastState = fromTokens(chain.slice(-(sampleSize - 1)));
@@ -76,6 +93,11 @@ function predictNext(chain, transitions, sampleSize) {
  * it “predicts” the next `token` for the `chain` and yields it.
  * If there are no following tokens, it removes the last token from the chain
  * so the chain contains only sequences that can produce new words.
+ *
+ * @param {string} startText, initial text for the chain.
+ * @param {TransitionMatrix} transitions, the transition matrix object.
+ * @param {number} sampleSize, the number of tokens in a group.
+ * @returns {Generator<Token>}
  */
 function* generateChain(startText, transitions, sampleSize) {
   const chain = createChain(startText, transitions);
