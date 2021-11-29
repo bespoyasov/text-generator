@@ -18,6 +18,10 @@ const fromTokens = (tokens) => escapeString(tokens.join(""));
  * Each sample contains 2 or more `tokens` — words, spaces, or punctuation marks.
  * The bigger `sampleSize` is, the more tokens are used to generate the next.
  *
+ * More about transition matrix:
+ * @see https://dev.to/bespoyasov/text-generation-with-markov-chains-in-javascript-i38 in English
+ * @see https://bespoyasov.ru/blog/text-generation-with-markov-chains/ in Russian
+ *
  * @param {Array<Token>} corpus, the source text represented as an array of tokens.
  * @param {number} sampleSize, the size of a token group, first tokens of which
  *                             will constitute the TransitionMatrix key.
