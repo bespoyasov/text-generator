@@ -10,5 +10,5 @@ Open the [app](https://bespoyasov.ru/showcase/text-generator/browser/) in the br
 
 The generator uses Markov chains to randomly choose a word based on previously generated words. More info about Markov chains, how text generation works, and how to create one of these generators:
 
-- 🇷🇺 [In Russian](/)
-- 🇬🇧 [In English](/)
+- 🇷🇺 [In Russian](https://bespoyasov.ru/blog/text-generation-with-markov-chains/)
+- 🇬🇧 [In English](https://dev.to/bespoyasov/text-generation-with-markov-chains-in-javascript-i38)
